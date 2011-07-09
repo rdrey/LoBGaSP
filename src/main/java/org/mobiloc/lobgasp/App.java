@@ -33,9 +33,8 @@ public class App {
             System.out.println(name + ": " + loc);
         }
         try {
-            OSM osm = OSMParser.parse("map.osm.osm");
+            OSM osm = OSMParser.parse("src/test/map.osm");
             System.out.println(osm.getNodes().iterator().next().tags);
-            System.out.println("here");
 
         } catch (Exception ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
