@@ -8,7 +8,7 @@ package org.mobiloc.lobgasp.osm.parser.model;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.WKBWriter;
+import com.vividsolutions.jts.io.WKTWriter;
 import java.util.Map;
 
 /**
@@ -31,6 +31,8 @@ public class OSMNode extends AbstractNode {
         Point p = new GeometryFactory().createPoint(
                 new Coordinate(Double.valueOf(lon), Double.valueOf(lat)));
 
-        return WKBWriter.bytesToHex(new WKBWriter().write(p));
+        WKTWriter w = new WKTWriter(2);
+        return w.writeFormatted(p);
+        //return WKBWriter.bytesToHex(new WKBWriter().write(p));
     }
 }
