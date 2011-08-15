@@ -29,6 +29,7 @@ public class SpatialObject {
 
     public void setId(Long id) { this.id = id; }
 
+    @Column(name = "LOC")
     @Type(type = "org.hibernatespatial.GeometryUserType")
     private Geometry geom;
 
@@ -36,19 +37,11 @@ public class SpatialObject {
         return false;
     }
 
-    /**
-     * @return the geom
-     */
     public Geometry getGeom() {
         return geom;
     }
 
-    /**
-     * @param geom the geom to set
-     */
     public void setGeom(Geometry geom) {
         this.geom = geom;
     }
-    
-
 }
