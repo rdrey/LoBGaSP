@@ -6,12 +6,18 @@
 package org.mobiloc.lobgasp;
 
 import com.vividsolutions.jts.geom.Point;
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.mobiloc.lobgasp.model.SpatialObject;
 import org.mobiloc.lobgasp.osm.parser.OSMParser;
 import org.mobiloc.lobgasp.osm.parser.model.OSM;
+import org.mobiloc.lobgasp.osm.parser.model.OSMNode;
+import org.mobiloc.lobgasp.util.HibernateUtil;
 
 /**
  *
@@ -19,7 +25,12 @@ import org.mobiloc.lobgasp.osm.parser.model.OSM;
  */
 public class SpatialProvider {
 
-    List<SpatialObject> objects;
+    HashMap<SpatialObject, SpatialObject> objects;
+
+    public SpatialProvider()
+    {
+        objects = new HashMap<SpatialObject, SpatialObject>();
+    }
 
     void init()
     {
@@ -31,12 +42,33 @@ public class SpatialProvider {
     {
         OSM osm = null;
 
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = s.beginTransaction();
+
         try {
             osm = OSMParser.parse(mapOsm);
         } catch (Exception ex) {
             Logger.getLogger(SpatialProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        //Nodes first
+        for (OSMNode node : osm.getNodes())
+        {
+            for (SpatialObject so : objects.keySet())
+            {
+                if (so.xmlRule(node))
+                {
+                    System.out.println("Found " + so.getClass());
+                    Serializable save = s.save(objects.get(so).construct(node));
+                }
+            }
+        }
+
+        //Now ways
+
+        //Then relations
+
+        tx.commit();
         
     }
     
@@ -50,6 +82,13 @@ public class SpatialProvider {
 
     void register(Class<? extends SpatialObject> source, Class<? extends SpatialObject> result)
     {
+        try {
+            objects.put(source.newInstance(), result.newInstance());
+        } catch (InstantiationException ex) {
+            Logger.getLogger(SpatialProvider.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(SpatialProvider.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.out.println(source);
     }
 

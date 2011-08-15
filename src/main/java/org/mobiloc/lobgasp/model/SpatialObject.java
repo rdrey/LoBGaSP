@@ -6,8 +6,9 @@
 package org.mobiloc.lobgasp.model;
 
 import com.vividsolutions.jts.geom.Geometry;
-import java.io.Serializable;
 import javax.persistence.*;
+import org.hibernate.annotations.Type;
+import org.mobiloc.lobgasp.osm.parser.model.AbstractNode;
 //import org.hibernate.annotations.Entity;
 
 /**
@@ -16,16 +17,38 @@ import javax.persistence.*;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class SpatialObject implements Serializable {
+public class SpatialObject {
     Long id;
+
+    public SpatialObject() {}
+
+    public SpatialObject construct(AbstractNode in) {return this;}
 
     @Id @GeneratedValue(strategy=GenerationType.TABLE)
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }
 
-    Geometry geom;
-    public double lat, lng;
+    @Type(type = "org.hibernatespatial.GeometryUserType")
+    private Geometry geom;
+
+    public boolean xmlRule(AbstractNode in) {
+        return false;
+    }
+
+    /**
+     * @return the geom
+     */
+    public Geometry getGeom() {
+        return geom;
+    }
+
+    /**
+     * @param geom the geom to set
+     */
+    public void setGeom(Geometry geom) {
+        this.geom = geom;
+    }
     
 
 }

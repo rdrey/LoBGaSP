@@ -6,6 +6,7 @@
 package org.mobiloc.lobgasp.osm.parser.model;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTWriter;
@@ -25,6 +26,10 @@ public class OSMNode extends AbstractNode {
         this.lat = lat;
         this.lon = lon;
         this.tags = tags;
+    }
+
+    public Geometry getGeom() {
+        return new GeometryFactory().createPoint(new Coordinate(Double.valueOf(lon), Double.valueOf(lat)));
     }
 
     public String getLocation() {
