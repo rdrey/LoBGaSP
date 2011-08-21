@@ -6,10 +6,15 @@
 package org.mobiloc.lobgasp.model;
 
 import com.vividsolutions.jts.geom.Geometry;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import org.hibernate.annotations.Type;
 import org.mobiloc.lobgasp.osm.parser.model.AbstractNode;
-//import org.hibernate.annotations.Entity;
 
 /**
  *
@@ -29,14 +34,14 @@ public class SpatialObject {
 
     public void setId(Long id) { this.id = id; }
 
-    @Column(name = "LOC")
-    @Type(type = "org.hibernatespatial.GeometryUserType")
     private Geometry geom;
 
     public boolean xmlRule(AbstractNode in) {
         return false;
     }
 
+    @Column(name = "LOC")
+    @Type(type = "org.hibernatespatial.GeometryUserType")
     public Geometry getGeom() {
         return geom;
     }
