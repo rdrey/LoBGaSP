@@ -33,6 +33,12 @@
             <groupId>org.hibernatespatial</groupId>
             <artifactId>hibernate-spatial-postgis</artifactId>
             <version>1.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jta</artifactId>
+                    <groupId>javax.transaction</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- the Postgis JDBC driver -->
@@ -55,7 +61,7 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.5.11</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-commons-annotations</artifactId>
@@ -67,7 +73,7 @@
             <artifactId>commons-collections</artifactId>
             <version>3.1</version>
         </dependency>
-      
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -77,12 +83,24 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate</artifactId>
-            <version>3.2.5.ga</version>
+            <version>3.2.6.ga</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jta</artifactId>
+                    <groupId>javax.transaction</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>3.3.2.GA</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>hibernate</artifactId>
+                    <groupId>org.hibernate</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.sql</groupId>
@@ -92,7 +110,7 @@
         <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>jta</artifactId>
-            <version>1.0.1B</version>
+            <version>1.1</version>
         </dependency>
     </dependencies>
   
