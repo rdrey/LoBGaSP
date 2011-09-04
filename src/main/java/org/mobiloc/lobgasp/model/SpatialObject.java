@@ -6,6 +6,7 @@
 package org.mobiloc.lobgasp.model;
 
 import com.vividsolutions.jts.geom.Geometry;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,17 +23,17 @@ import org.mobiloc.lobgasp.osm.parser.model.AbstractNode;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class SpatialObject {
-    Long id;
+public class SpatialObject implements Serializable {
+    int id;
 
     public SpatialObject() {}
 
     public SpatialObject construct(AbstractNode in) {return this;}
 
     @Id @GeneratedValue(strategy=GenerationType.TABLE)
-    public Long getId() { return id; }
+    public int getId() { return id; }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(int id) { this.id = id; }
 
     private Geometry geom;
 

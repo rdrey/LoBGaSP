@@ -3,7 +3,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost/gis</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost/mobiloc</property>
         <property name="hibernate.connection.username">rainerdreyer</property>
         <property name="hibernate.current_session_context_class">org.hibernate.context.ThreadLocalSessionContext</property>
         
@@ -11,10 +11,14 @@
 
         <property name="show_sql">true</property>
         <property name="hibernate.connection.autocommit">true</property>
-        <property name="hbm2ddl.auto">update</property>
+        <property name="hbm2ddl.auto">create</property>
 
         <mapping class="org.mobiloc.lobgasp.model.SpatialObject"/>
         <mapping class="org.mobiloc.lobgasp.osm.model.POI"/>
         <mapping class="org.mobiloc.lobgasp.osm.model.Pub"/>
+
+        <mapping class="org.mobiloc.lobgasp.osm.model.WaySchema"/>
+        <mapping class="org.mobiloc.lobgasp.osm.model.Road"/>
+        <mapping class="org.mobiloc.lobgasp.osm.model.Building"/>
     </session-factory>
 </hibernate-configuration>

@@ -1,10 +1,20 @@
 package org.mobiloc.lobgasp;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.mobiloc.lobgasp.util.HibernateUtil;
 import org.hibernate.Transaction;
+import org.hibernatespatial.criterion.SpatialRestrictions;
+import org.mobiloc.lobgasp.osm.model.Building;
 import org.mobiloc.lobgasp.osm.model.Pub;
+import org.mobiloc.lobgasp.osm.model.Road;
 
 /**
  * Hello world!
@@ -15,33 +25,12 @@ public class App {
     public static void main(String[] args) {
         System.out.println("Hello World!");
 
-        /*
-        Iterator l = s.createSQLQuery("SELECT ST_AsText(ST_Transform(way,94326)), name FROM planet_osm_point"
-                + " WHERE amenity like 'pub' OR amenity like 'bar'"
-                + " ORDER BY osm_id").list().iterator();
-
-        while (l.hasNext()) {
-            Object[] row = (Object[]) l.next();
-            String loc = (String) row[0];
-            String name = (String) row[1];
-
-            System.out.println(name + ": " + loc);
-        }
-         *
-         */
-
-//        try {
-//            OSM osm = OSMParser.parse("map.osm");
-//            System.out.println(osm.getNodes().iterator().next().tags);
-//            System.out.println(osm.getNodes().iterator().next().getLocation());
-//
-//        } catch (Exception ex) {
-//            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-
         SpatialProvider sp = new SpatialProvider();
+        //TODO interface for custom objects
         sp.register(Pub.class, Pub.class);
-        sp.init();
+        sp.initFromFile("campus.osm");
+
+        //
 
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = s.beginTransaction();
@@ -49,6 +38,34 @@ public class App {
         List so = s.createQuery("from Pub").list();
         System.out.println(((Pub) so.get(0)).getName());
 
+        serializeResults(Pub.class, "pub.out", s);
+        serializeResults(Road.class, "roads.out", s);
+        serializeResults(Building.class, "buildings.out", s);
+
         tx.commit();
+    }
+
+    private static void serializeResults(Class object, String toFile, Session s) {
+        FileOutputStream fos = null;
+        Criteria query = s.createCriteria(object);
+        //This is how to later filter by geometry:
+        //        query.add(SpatialRestrictions.within("geom", filter));
+        List results = query.list();
+
+        try {
+            fos = new FileOutputStream(toFile);
+            ObjectOutputStream out = new ObjectOutputStream(fos);
+            out.writeObject(results);
+            out.close();
+        } catch (Exception ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException ex) {
+                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
 }
