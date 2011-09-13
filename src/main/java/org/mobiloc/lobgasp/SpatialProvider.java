@@ -12,10 +12,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.mobiloc.lobgasp.model.SpatialObject;
-import org.mobiloc.lobgasp.osm.model.Building;
-import org.mobiloc.lobgasp.osm.model.Road;
-import org.mobiloc.lobgasp.osm.model.WaySchema;
+import org.mobiloc.lobgasp.model.SpatialDBEntity;
+import org.mobiloc.lobgasp.osm.model.BuildingEntity;
+import org.mobiloc.lobgasp.osm.model.POIEntity;
+import org.mobiloc.lobgasp.osm.model.RoadEntity;
+import org.mobiloc.lobgasp.osm.model.WayEntity;
 import org.mobiloc.lobgasp.osm.parser.OSMParser;
 import org.mobiloc.lobgasp.osm.parser.model.OSM;
 import org.mobiloc.lobgasp.osm.parser.model.OSMNode;
@@ -28,10 +29,10 @@ import org.mobiloc.lobgasp.util.HibernateUtil;
  */
 public class SpatialProvider {
 
-    HashMap<SpatialObject, SpatialObject> objects;
+    HashMap<SpatialDBEntity, SpatialDBEntity> objects;
 
     public SpatialProvider() {
-        objects = new HashMap<SpatialObject, SpatialObject>();
+        objects = new HashMap<SpatialDBEntity, SpatialDBEntity>();
     }
 
     void init() {
@@ -53,29 +54,36 @@ public class SpatialProvider {
 
         //Nodes first
         for (OSMNode node : osm.getNodes()) {
-            for (SpatialObject so : objects.keySet()) {
+            boolean found = false;
+            for (SpatialDBEntity so : objects.keySet()) {
                 if (so.xmlRule(node)) {
                     System.out.println("Found " + so.getClass());
                     Serializable save = s.save(objects.get(so).construct(node));
+                    found = true;
                 }
+            }
+            if (!found) {
+                POIEntity poi = new POIEntity();
+                poi.construct(node);
+                s.save(poi);
             }
         }
 
         //Now ways
-        Building building = new Building();
-        Road road = new Road();
+        BuildingEntity building = new BuildingEntity();
+        RoadEntity road = new RoadEntity();
 
         for (Way way : osm.getWays()) {
             if (building.xmlRule(way)) {
-                Building tempBuilding = new Building();
+                BuildingEntity tempBuilding = new BuildingEntity();
                 tempBuilding.construct(way);
                 s.save(tempBuilding);
             } else if (road.xmlRule(way)) {
-                Road tempRoad = new Road();
+                RoadEntity tempRoad = new RoadEntity();
                 tempRoad.construct(way);
                 s.save(tempRoad);
             } else {
-                WaySchema dbWay = new WaySchema();
+                WayEntity dbWay = new WayEntity();
                 dbWay.construct(way);
                 s.save(dbWay);
             }
@@ -87,12 +95,12 @@ public class SpatialProvider {
 
     }
 
-    List<SpatialObject> provide(Point p, float radius) {
+    List<SpatialDBEntity> provide(Point p, float radius) {
 
         return null;
     }
 
-    void register(Class<? extends SpatialObject> source, Class<? extends SpatialObject> result) {
+    void register(Class<? extends SpatialDBEntity> source, Class<? extends SpatialDBEntity> result) {
         try {
             objects.put(source.newInstance(), result.newInstance());
         } catch (InstantiationException ex) {

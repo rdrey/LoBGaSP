@@ -12,4 +12,12 @@
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
+        <action>
+            <actionName>build-with-dependencies</actionName>
+            <basedir>.</basedir>
+            <reactor>also-make</reactor>
+            <goals>
+                <goal>install</goal>
+            </goals>
+        </action>
     </actions>

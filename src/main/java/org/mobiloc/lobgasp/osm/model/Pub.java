@@ -2,39 +2,26 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package org.mobiloc.lobgasp.osm.model;
 
-import javax.persistence.*;
-import org.mobiloc.lobgasp.model.SpatialObject;
-import org.mobiloc.lobgasp.osm.parser.model.AbstractNode;
-import org.mobiloc.lobgasp.osm.parser.model.OSMNode;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+import java.io.Serializable;
 
 /**
  *
  * @author rainerdreyer
  */
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Pub extends POI {
+public class Pub implements Serializable {
 
     private String name;
+    private Geometry geom;
 
-    @Override
-    public boolean xmlRule(AbstractNode in) {
-
-        if (in.tags.containsKey("amenity")
-                && in.tags.get("amenity").equalsIgnoreCase("pub")) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public SpatialObject construct(AbstractNode in)
-    {
-        this.setName(in.tags.get("name"));
-        this.setGeom(((OSMNode) in).getGeom());
-        return this;
+    public Pub(String name, Geometry geom) {
+        this.name = name;
+        this.geom = GeometryFactory.createPointFromInternalCoord(((Point)geom).getCoordinate(),geom);
     }
 
     /**
@@ -50,4 +37,20 @@ public class Pub extends POI {
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * @return the geom
+     */
+    public Geometry getGeom() {
+        return geom;
+    }
+
+    /**
+     * @param geom the geom to set
+     */
+    public void setGeom(Geometry geom) {
+        this.geom = geom;
+    }
+
+
 }

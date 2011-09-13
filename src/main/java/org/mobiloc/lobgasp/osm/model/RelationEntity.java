@@ -5,13 +5,13 @@
 
 package org.mobiloc.lobgasp.osm.model;
 
-import org.mobiloc.lobgasp.model.SpatialObject;
+import org.mobiloc.lobgasp.model.SpatialDBEntity;
 
 /**
  *
  * @author rainerdreyer
  */
-public class RelationSchema extends SpatialObject{
+public class RelationEntity extends SpatialDBEntity{
 
 
 

@@ -2,13 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.mobiloc.lobgasp.osm.model;
 
 import javax.persistence.*;
-import org.mobiloc.lobgasp.model.SpatialObject;
+import org.mobiloc.lobgasp.model.SpatialDBEntity;
 import org.mobiloc.lobgasp.osm.parser.model.AbstractNode;
-import org.mobiloc.lobgasp.osm.parser.model.Way;
+import org.mobiloc.lobgasp.osm.parser.model.OSMNode;
 
 /**
  *
@@ -16,26 +15,30 @@ import org.mobiloc.lobgasp.osm.parser.model.Way;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Building extends SpatialObject{
+public class PubEntity extends POIEntity {
 
     private String name;
 
     @Override
     public boolean xmlRule(AbstractNode in) {
 
-        if (in.tags.containsKey("building")
-                && in.tags.get("building").equalsIgnoreCase("yes")) {
+        if (in.tags.containsKey("amenity")
+                && in.tags.get("amenity").equalsIgnoreCase("pub")) {
             return true;
         }
         return false;
     }
 
     @Override
-    public SpatialObject construct(AbstractNode in)
+    public SpatialDBEntity construct(AbstractNode in)
     {
         this.setName(in.tags.get("name"));
-        this.setGeom(((Way) in).getLineString());
+        this.setGeom(((OSMNode) in).getGeom());
         return this;
+    }
+
+    public Pub toSimple() {
+        return new Pub(name, getGeom());
     }
 
     /**
@@ -51,5 +54,4 @@ public class Building extends SpatialObject{
     public void setName(String name) {
         this.name = name;
     }
-
 }

@@ -9,7 +9,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import javax.persistence.*;
-import org.mobiloc.lobgasp.model.SpatialObject;
+import org.mobiloc.lobgasp.model.SpatialDBEntity;
 
 /**
  *
@@ -17,7 +17,7 @@ import org.mobiloc.lobgasp.model.SpatialObject;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class POI extends SpatialObject{
+public class POIEntity extends SpatialDBEntity{
 
     /**
      * @return the lat
