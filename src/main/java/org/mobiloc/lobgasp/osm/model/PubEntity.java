@@ -6,6 +6,7 @@ package org.mobiloc.lobgasp.osm.model;
 
 import javax.persistence.*;
 import org.mobiloc.lobgasp.model.SpatialDBEntity;
+import org.mobiloc.lobgasp.model.SpatialObject;
 import org.mobiloc.lobgasp.osm.parser.model.AbstractNode;
 import org.mobiloc.lobgasp.osm.parser.model.OSMNode;
 
@@ -37,7 +38,8 @@ public class PubEntity extends POIEntity {
         return this;
     }
 
-    public Pub toSimple() {
+    @Override
+    public SpatialObject toSimple() {
         return new Pub(name, getGeom());
     }
 

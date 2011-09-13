@@ -9,12 +9,13 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import java.io.Serializable;
+import org.mobiloc.lobgasp.model.SpatialObject;
 
 /**
  *
  * @author rainerdreyer
  */
-public class Pub implements Serializable {
+public class Pub extends SpatialObject implements Serializable {
 
     private String name;
     private Geometry geom;

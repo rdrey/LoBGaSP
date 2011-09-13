@@ -9,6 +9,8 @@ package org.mobiloc.lobgasp.model;
  *
  * @author rainerdreyer
  */
-public class SpatialObject {
+public interface EntityToObject {
+
+    public SpatialObject toSimple();
 
 }

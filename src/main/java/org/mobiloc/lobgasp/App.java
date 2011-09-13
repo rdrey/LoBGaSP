@@ -12,7 +12,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.mobiloc.lobgasp.util.HibernateUtil;
 import org.hibernate.Transaction;
-import org.mobiloc.lobgasp.model.SpatialObject;
+import org.mobiloc.lobgasp.model.SpatialDBEntity;
+import org.mobiloc.lobgasp.model.EntityToObject;
 import org.mobiloc.lobgasp.osm.model.BuildingEntity;
 import org.mobiloc.lobgasp.osm.model.PubEntity;
 
@@ -35,9 +36,9 @@ public class App {
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = s.beginTransaction();
 
-        List so = s.createQuery("from Pub where name like 'UCT Club'").list();
+        List so = s.createQuery("from PubEntity where name like 'UCT Club'").list();
         PubEntity pub = (PubEntity) so.get(0);
-        List cs = s.createQuery("from Building where name like 'Computer Science Building'").list();
+        List cs = s.createQuery("from BuildingEntity where name like 'Computer Science Building'").list();
         BuildingEntity compSci = (BuildingEntity) cs.get(0);
 
         System.out.println("Distance: " + Math.toRadians(compSci.getGeom().distance(pub.getGeom())) * 6371000);
@@ -77,7 +78,7 @@ public class App {
         List temp = new LinkedList();
 
         for (Object t: results) {
-            temp.add(((SpatialObject) t).toSimple());
+            temp.add(((SpatialDBEntity) t).toSimple());
         }
 
         try {

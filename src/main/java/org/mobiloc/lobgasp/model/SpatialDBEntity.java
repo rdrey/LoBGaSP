@@ -24,7 +24,7 @@ import org.mobiloc.lobgasp.osm.parser.model.OSMNode;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class SpatialDBEntity implements Serializable {
+public class SpatialDBEntity implements Serializable, EntityToObject {
     int id;
 
     public SpatialDBEntity() {}
@@ -53,5 +53,10 @@ public class SpatialDBEntity implements Serializable {
 
     public void setGeom(Geometry geom) {
         this.geom = geom;
+    }
+
+    @Override
+    public SpatialObject toSimple() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
