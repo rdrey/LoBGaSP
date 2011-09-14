@@ -57,37 +57,46 @@ public class SpatialProvider {
             boolean found = false;
             for (SpatialDBEntity so : objects.keySet()) {
                 if (so.xmlRule(node)) {
+                    SpatialDBEntity temp = new POIEntity();
+                    try {
+                        temp = so.getClass().newInstance();
+                    } catch (InstantiationException ex) {
+                        Logger.getLogger(SpatialProvider.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IllegalAccessException ex) {
+                        Logger.getLogger(SpatialProvider.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     System.out.println("Found " + so.getClass());
-                    Serializable save = s.save(objects.get(so).construct(node));
+                    Serializable save = s.save(temp.construct(node));
+                    Logger.getLogger(SpatialProvider.class.getName()).log(Level.INFO, save.toString());
                     found = true;
                 }
             }
-            if (!found) {
-                POIEntity poi = new POIEntity();
-                poi.construct(node);
-                s.save(poi);
-            }
+//            if (!found) {
+//                POIEntity poi = new POIEntity();
+//                poi.construct(node);
+//                s.save(poi);
+//            }
         }
 
         //Now ways
-        BuildingEntity building = new BuildingEntity();
-        RoadEntity road = new RoadEntity();
-
-        for (Way way : osm.getWays()) {
-            if (building.xmlRule(way)) {
-                BuildingEntity tempBuilding = new BuildingEntity();
-                tempBuilding.construct(way);
-                s.save(tempBuilding);
-            } else if (road.xmlRule(way)) {
-                RoadEntity tempRoad = new RoadEntity();
-                tempRoad.construct(way);
-                s.save(tempRoad);
-            } else {
-                WayEntity dbWay = new WayEntity();
-                dbWay.construct(way);
-                s.save(dbWay);
-            }
-        }
+//        BuildingEntity building = new BuildingEntity();
+//        RoadEntity road = new RoadEntity();
+//
+//        for (Way way : osm.getWays()) {
+//            if (building.xmlRule(way)) {
+//                BuildingEntity tempBuilding = new BuildingEntity();
+//                tempBuilding.construct(way);
+//                s.save(tempBuilding);
+//            } else if (road.xmlRule(way)) {
+//                RoadEntity tempRoad = new RoadEntity();
+//                tempRoad.construct(way);
+//                s.save(tempRoad);
+//            } else {
+//                WayEntity dbWay = new WayEntity();
+//                dbWay.construct(way);
+//                s.save(dbWay);
+//            }
+//        }
 
         //Then relations
 

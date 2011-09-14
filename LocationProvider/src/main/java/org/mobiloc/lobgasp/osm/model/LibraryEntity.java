@@ -6,6 +6,8 @@
 package org.mobiloc.lobgasp.osm.model;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.*;
 import org.mobiloc.lobgasp.model.SpatialObject;
 import org.mobiloc.lobgasp.osm.parser.model.AbstractNode;
@@ -27,6 +29,7 @@ public class LibraryEntity extends NamedPOIEntity {
     @Override
     public boolean xmlRule(AbstractNode in) {
         if (in.tags.containsKey("amenity") && in.tags.get("amenity").equalsIgnoreCase("library")) {
+            Logger.getLogger(LibraryEntity.class.getName()).log(Level.INFO, in.tags.get("name"));
             return true;
         }
         return false;

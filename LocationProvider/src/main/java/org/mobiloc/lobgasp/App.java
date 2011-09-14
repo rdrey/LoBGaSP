@@ -15,6 +15,7 @@ import org.hibernate.Transaction;
 import org.mobiloc.lobgasp.model.SpatialDBEntity;
 import org.mobiloc.lobgasp.model.EntityToObject;
 import org.mobiloc.lobgasp.osm.model.BuildingEntity;
+import org.mobiloc.lobgasp.osm.model.LibraryEntity;
 import org.mobiloc.lobgasp.osm.model.POIEntity;
 import org.mobiloc.lobgasp.osm.model.PubEntity;
 
@@ -30,6 +31,7 @@ public class App {
         SpatialProvider sp = new SpatialProvider();
         //TODO interface for custom objects
         sp.register(PubEntity.class, PubEntity.class);
+        sp.register(LibraryEntity.class, LibraryEntity.class);
         sp.initFromFile("campus.osm");
 
         //
@@ -39,12 +41,12 @@ public class App {
 
         List so = s.createQuery("from PubEntity where name like 'UCT Club'").list();
         PubEntity pub = (PubEntity) so.get(0);
-        List cs = s.createQuery("from POIEntity where name like ''").list();
-        POIEntity compSci = (POIEntity) cs.get(0);
+        List cs = s.createQuery("from LibraryEntity where name like 'Rondebosch Public Library'").list();
+        LibraryEntity lib = (LibraryEntity) cs.get(0);
 
-        System.out.println("Distance: " + Math.toRadians(compSci.getGeom().distance(pub.getGeom())) * Math.PI / 180.0 * 6378137.0);
-        System.out.println("Distance: " + compSci.getGeom().distance(pub.getGeom()));
-        System.out.println("Distance: " + distance((Point)compSci.getGeom(), (Point)pub.getGeom()));
+        System.out.println("Distance: " + Math.toRadians(lib.getGeom().distance(pub.getGeom())) * Math.PI / 180.0 * 6378137.0);
+        System.out.println("Distance: " + lib.getGeom().distance(pub.getGeom()));
+        System.out.println("Distance: " + distance((Point)lib.getGeom(), (Point)pub.getGeom()));
 
         serializeResults(PubEntity.class, "pub.out", s);
 //        serializeResults(Road.class, "roads.out", s);
